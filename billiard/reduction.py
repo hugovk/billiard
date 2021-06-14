@@ -6,7 +6,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 import functools
 import io
@@ -41,7 +40,7 @@ if PY3:
         _copyreg_dispatch_table = copyreg.dispatch_table
 
         def __init__(self, *args):
-            super(ForkingPickler, self).__init__(*args)
+            super().__init__(*args)
             self.dispatch_table = self._copyreg_dispatch_table.copy()
             self.dispatch_table.update(self._extra_reducers)
 
@@ -136,7 +135,7 @@ if sys.platform == 'win32':
         '''Receive a handle over a local connection.'''
         return conn.recv().detach()
 
-    class DupHandle(object):
+    class DupHandle:
         '''Picklable wrapper for a handle.'''
         def __init__(self, handle, access, pid=None):
             if pid is None:

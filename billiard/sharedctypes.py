@@ -6,7 +6,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 import ctypes
 import sys
@@ -128,7 +127,7 @@ def synchronized(obj, lock=None, ctx=None):
             scls = class_cache[cls]
         except KeyError:
             names = [field[0] for field in cls._fields_]
-            d = dict((name, make_property(name)) for name in names)
+            d = {name: make_property(name) for name in names}
             classname = 'Synchronized' + cls.__name__
             scls = class_cache[cls] = type(classname, (SynchronizedBase,), d)
         return scls(obj, lock, ctx)
@@ -197,7 +196,7 @@ class_cache = weakref.WeakKeyDictionary()
 #
 
 
-class SynchronizedBase(object):
+class SynchronizedBase:
 
     def __init__(self, obj, lock=None, ctx=None):
         self._obj = obj
@@ -226,7 +225,7 @@ class SynchronizedBase(object):
         return self._lock
 
     def __repr__(self):
-        return '<%s wrapper for %s>' % (type(self).__name__, self._obj)
+        return '<{} wrapper for {}>'.format(type(self).__name__, self._obj)
 
 
 class Synchronized(SynchronizedBase):

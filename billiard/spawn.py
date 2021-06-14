@@ -7,7 +7,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 import io
 import os
@@ -198,7 +197,7 @@ def _setup_logging_in_child_hack():
 
 def _main(fd):
     _Django_old_layout_hack__load()
-    with io.open(fd, 'rb', closefd=True) as from_parent:
+    with open(fd, 'rb', closefd=True) as from_parent:
         process.current_process()._inheriting = True
         try:
             preparation_data = pickle.load(from_parent)

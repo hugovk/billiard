@@ -6,7 +6,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 #
 # Imports
@@ -58,7 +57,7 @@ def _cleanup():
 def _maybe_flush(f):
     try:
         f.flush()
-    except (AttributeError, EnvironmentError, NotImplementedError):
+    except (AttributeError, OSError, NotImplementedError):
         pass
 
 
@@ -74,7 +73,7 @@ def active_children(_cleanup=_cleanup):
     return list(_children)
 
 
-class BaseProcess(object):
+class BaseProcess:
     '''
     Process objects represent activity that is run in a separate process
 
@@ -278,7 +277,7 @@ class BaseProcess(object):
             else:
                 status = 'stopped[%s]' % _exitcode_to_name.get(status, status)
 
-        return '<%s(%s, %s%s)>' % (type(self).__name__, self._name,
+        return '<{}({}, {}{})>'.format(type(self).__name__, self._name,
                                    status, self.daemon and ' daemon' or '')
 
     ##
@@ -296,7 +295,7 @@ class BaseProcess(object):
                 try:
                     sys.stdin.close()
                     sys.stdin = open(os.devnull)
-                except (EnvironmentError, OSError, ValueError):
+                except (OSError, ValueError):
                     pass
             old_process = _current_process
             _set_current_process(self)

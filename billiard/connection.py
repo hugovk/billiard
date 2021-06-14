@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # A higher level module for using sockets (or Windows named pipes)
 #
@@ -8,7 +7,6 @@
 # Licensed to PSF under a Contributor Agreement.
 #
 
-from __future__ import absolute_import
 
 import errno
 import io
@@ -127,13 +125,13 @@ def address_type(address):
 #
 
 
-class _SocketContainer(object):
+class _SocketContainer:
 
     def __init__(self, sock):
         self.sock = sock
 
 
-class _ConnectionBase(object):
+class _ConnectionBase:
     _handle = None
 
     def __init__(self, handle, readable=True, writable=True):
@@ -402,7 +400,7 @@ class Connection(_ConnectionBase):
         while True:
             try:
                 n = write(self._handle, buf)
-            except (OSError, IOError, socket.error) as exc:
+            except OSError as exc:
                 if getattr(exc, 'errno', None) != errno.EINTR:
                     raise
             else:
@@ -418,7 +416,7 @@ class Connection(_ConnectionBase):
         while remaining > 0:
             try:
                 chunk = read(handle, remaining)
-            except (OSError, IOError, socket.error) as exc:
+            except OSError as exc:
                 if getattr(exc, 'errno', None) != errno.EINTR:
                     raise
             else:
@@ -466,7 +464,7 @@ class Connection(_ConnectionBase):
 # Public functions
 #
 
-class Listener(object):
+class Listener:
     '''
     Returns a listener object.
 
@@ -623,7 +621,7 @@ else:
 #
 
 
-class SocketListener(object):
+class SocketListener:
     '''
     Representation of a socket which is bound to an address and listening
     '''
@@ -655,7 +653,7 @@ class SocketListener(object):
         while True:
             try:
                 s, self._last_accepted = self._socket.accept()
-            except (OSError, IOError, socket.error) as exc:
+            except OSError as exc:
                 if getattr(exc, 'errno', None) != errno.EINTR:
                     raise
             else:
@@ -689,7 +687,7 @@ def SocketClient(address):
 
 if sys.platform == 'win32':
 
-    class PipeListener(object):
+    class PipeListener:
         '''
         Representation of a named pipe
         '''
@@ -814,7 +812,7 @@ def answer_challenge(connection, authkey):
 #
 
 
-class ConnectionWrapper(object):
+class ConnectionWrapper:
 
     def __init__(self, conn, dumps, loads):
         self._conn = conn
@@ -992,7 +990,7 @@ else:
         while True:
             try:
                 return _poll(object_list, timeout)
-            except (OSError, IOError, socket.error) as e:
+            except OSError as e:
                 if e.errno != errno.EINTR:
                     raise
             if timeout is not None:

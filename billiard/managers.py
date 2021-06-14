@@ -7,7 +7,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 #
 # Imports
@@ -60,7 +59,7 @@ if view_types[0] is not list:  # only needed in Py3.0
 #
 
 
-class Token(object):
+class Token:
     '''
     Type to uniquely indentify a shared object
     '''
@@ -141,7 +140,7 @@ def public_methods(obj):
 #
 
 
-class Server(object):
+class Server:
     '''
     Server class which runs in a process controlled by a manager object
     '''
@@ -249,7 +248,7 @@ class Server(object):
 
                 if methodname not in exposed:
                     raise AttributeError(
-                        'method %r of %r object is not in exposed=%r' % (
+                        'method {!r} of {!r} object is not in exposed={!r}'.format(
                             methodname, type(obj), exposed)
                     )
 
@@ -420,7 +419,7 @@ class Server(object):
 #
 
 
-class State(object):
+class State:
     __slots__ = ['value']
     INITIAL = 0
     STARTED = 1
@@ -440,7 +439,7 @@ listener_client = {
 #
 
 
-class BaseManager(object):
+class BaseManager:
     '''
     Base class for managers
     '''
@@ -681,7 +680,7 @@ class ProcessLocalSet(set):
 #
 
 
-class BaseProxy(object):
+class BaseProxy:
     '''
     A base for proxies of shared objects
     '''
@@ -886,8 +885,8 @@ def MakeProxyType(name, exposed, _cache={}):
     dic = {}
 
     for meth in exposed:
-        exec('''def %s(self, *args, **kwds):
-        return self._callmethod(%r, args, kwds)''' % (meth, meth), dic)
+        exec('''def {}(self, *args, **kwds):
+        return self._callmethod({!r}, args, kwds)'''.format(meth, meth), dic)
 
     ProxyType = type(name, (BaseProxy,), dic)
     ProxyType._exposed_ = exposed
@@ -925,7 +924,7 @@ def AutoProxy(token, serializer, manager=None, authkey=None,
 #
 
 
-class Namespace(object):
+class Namespace:
 
     def __init__(self, **kwds):
         self.__dict__.update(kwds)
@@ -935,12 +934,12 @@ class Namespace(object):
         temp = []
         for name, value in items:
             if not name.startswith('_'):
-                temp.append('%s=%r' % (name, value))
+                temp.append('{}={!r}'.format(name, value))
         temp.sort()
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(temp))
+        return '{}({})'.format(self.__class__.__name__, ', '.join(temp))
 
 
-class Value(object):
+class Value:
 
     def __init__(self, typecode, value, lock=True):
         self._typecode = typecode
@@ -953,7 +952,7 @@ class Value(object):
         self._value = value
 
     def __repr__(self):
-        return '%s(%r, %r)' % (type(self).__name__,
+        return '{}({!r}, {!r})'.format(type(self).__name__,
                                self._typecode, self._value)
     value = property(get, set)
 

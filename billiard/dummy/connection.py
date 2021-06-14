@@ -31,7 +31,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-from __future__ import absolute_import
 
 from billiard.five import Queue
 
@@ -40,7 +39,7 @@ __all__ = ['Client', 'Listener', 'Pipe']
 families = [None]
 
 
-class Listener(object):
+class Listener:
 
     def __init__(self, address=None, family=None, backlog=1):
         self._backlog_queue = Queue(backlog)
@@ -71,7 +70,7 @@ def Pipe(duplex=True):
     return Connection(a, b), Connection(b, a)
 
 
-class Connection(object):
+class Connection:
 
     def __init__(self, _in, _out):
         self._out = _out

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import io
 import os
 import msvcrt
@@ -39,7 +37,7 @@ if sys.platform == 'win32':
             handle.Close()
 
 
-class Popen(object):
+class Popen:
     '''
     Start a subprocess to run the code of a process object
     '''
@@ -59,7 +57,7 @@ class Popen(object):
                                      pipe_handle=rhandle)
         cmd = ' '.join('"%s"' % x for x in cmd)
 
-        with io.open(wfd, 'wb', closefd=True) as to_child:
+        with open(wfd, 'wb', closefd=True) as to_child:
             # start process
             try:
                 hp, ht, pid, tid = CreateProcess(

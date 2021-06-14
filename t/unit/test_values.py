@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 import pytest
 
 from billiard import Value, RawValue, Lock, Process
@@ -10,7 +9,7 @@ class test_values:
         ('i', 4343, 24234),
         ('d', 3.625, -4.25),
         ('h', -232, 234),
-        ('c', 'x'.encode('latin'), 'y'.encode('latin'))
+        ('c', b'x', b'y')
         ]
 
     def test_issue_229(self):

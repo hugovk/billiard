@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import io
 import os
 
@@ -16,7 +14,7 @@ __all__ = ['Popen']
 #
 
 
-class _DupFd(object):
+class _DupFd:
 
     def __init__(self, ind):
         self.ind = ind
@@ -35,7 +33,7 @@ class Popen(popen_fork.Popen):
 
     def __init__(self, process_obj):
         self._fds = []
-        super(Popen, self).__init__(process_obj)
+        super().__init__(process_obj)
 
     def duplicate_for_child(self, fd):
         self._fds.append(fd)
@@ -52,7 +50,7 @@ class Popen(popen_fork.Popen):
             context.set_spawning_popen(None)
 
         self.sentinel, w = forkserver.connect_to_new_process(self._fds)
-        with io.open(w, 'wb', closefd=True) as f:
+        with open(w, 'wb', closefd=True) as f:
             f.write(buf.getbuffer())
         self.pid = forkserver.read_unsigned(self.sentinel)
 

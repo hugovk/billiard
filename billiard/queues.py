@@ -6,7 +6,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 import sys
 import os
@@ -28,7 +27,7 @@ from .reduction import ForkingPickler
 __all__ = ['Queue', 'SimpleQueue', 'JoinableQueue']
 
 
-class Queue(object):
+class Queue:
     '''
     Queue type using a pipe, buffer and thread
     '''
@@ -329,7 +328,7 @@ class JoinableQueue(Queue):
                 self._cond.wait()
 
 
-class _SimpleQueue(object):
+class _SimpleQueue:
     '''
     Simplified Queue type -- really just a locked pipe
     '''

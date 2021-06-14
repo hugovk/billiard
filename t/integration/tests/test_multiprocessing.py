@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import absolute_import
 
 #
 # Unit tests for the multiprocessing package
@@ -83,7 +82,7 @@ except ImportError:
     ctypes_copy = None
 
 
-class TimingWrapper(object):
+class TimingWrapper:
     """Creates a wrapper for a function which records the
     time it takes to finish"""
 
@@ -99,7 +98,7 @@ class TimingWrapper(object):
             self.elapsed = time.time() - t
 
 
-class BaseTestCase(object):
+class BaseTestCase:
     """Base class for test cases"""
     ALLOWED_TYPES = ('processes', 'manager', 'threads')
 
@@ -947,7 +946,7 @@ class _TestContainers(BaseTestCase):
         indices = range(65, 70)
         for i in indices:
             d[i] = chr(i)
-        self.assertEqual(d.copy(), dict((j, chr(j)) for j in indices))
+        self.assertEqual(d.copy(), {j: chr(j) for j in indices})
         self.assertEqual(sorted(d.keys()), indices)
         self.assertEqual(sorted(d.values()), [chr(z) for z in indices])
         self.assertEqual(sorted(d.items()), [(x, chr(x)) for x in indices])
@@ -1103,7 +1102,7 @@ class _TestZZZNumberOfObjects(BaseTestCase):
 from billiard.managers import BaseManager, BaseProxy, RemoteError  # noqa
 
 
-class FooBar(object):
+class FooBar:
 
     def f(self):
         return 'f()'
@@ -1619,7 +1618,7 @@ class _TestFinalize(BaseTestCase):
     ALLOWED_TYPES = ('processes',)
 
     def _test_finalize(self, conn):
-        class Foo(object):
+        class Foo:
             pass
 
         a = Foo()
@@ -1690,7 +1689,7 @@ class _TestImportStar(BaseTestCase):
             for attr in getattr(mod, '__all__', ()):
                 self.assertTrue(
                     hasattr(mod, attr),
-                    '%r does not have attribute %r' % (mod, attr)
+                    '{!r} does not have attribute {!r}'.format(mod, attr)
                 )
 
 
@@ -1796,7 +1795,7 @@ def create_test_cases(Mixin, type):
     return result
 
 
-class ProcessesMixin(object):
+class ProcessesMixin:
     TYPE = 'processes'
     Process = billiard.Process
     locals().update(get_attributes(billiard, (
@@ -1810,7 +1809,7 @@ testcases_processes = create_test_cases(ProcessesMixin, type='processes')
 globals().update(testcases_processes)
 
 
-class ManagerMixin(object):
+class ManagerMixin:
     TYPE = 'manager'
     Process = billiard.Process
     manager = object.__new__(billiard.managers.SyncManager)
@@ -1824,7 +1823,7 @@ testcases_manager = create_test_cases(ManagerMixin, type='manager')
 globals().update(testcases_manager)
 
 
-class ThreadsMixin(object):
+class ThreadsMixin:
     TYPE = 'threads'
     Process = billiard.dummy.Process
     locals().update(get_attributes(billiard.dummy, (
@@ -1842,7 +1841,7 @@ class OtherTest(unittest.TestCase):
     # TODO: add more tests for deliver/answer challenge.
     def test_deliver_challenge_auth_failure(self):
 
-        class _FakeConnection(object):
+        class _FakeConnection:
 
             def recv_bytes(self, size):
                 return bytes('something bogus')
@@ -1855,7 +1854,7 @@ class OtherTest(unittest.TestCase):
 
     def test_answer_challenge_auth_failure(self):
 
-        class _FakeConnection(object):
+        class _FakeConnection:
 
             def __init__(self):
                 self.count = 0
@@ -1936,7 +1935,7 @@ def pool_in_process():
     pool.map(_afunc, [1, 2, 3, 4, 5, 6, 7])
 
 
-class _file_like(object):
+class _file_like:
     def __init__(self, delegate):
         self._delegate = delegate
         self._pid = None

@@ -31,7 +31,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-from __future__ import absolute_import
 
 #
 # Imports
@@ -110,7 +109,7 @@ def freeze_support():
     pass
 
 
-class Namespace(object):
+class Namespace:
 
     def __init__(self, **kwds):
         self.__dict__.update(kwds)
@@ -120,9 +119,9 @@ class Namespace(object):
         temp = []
         for name, value in items:
             if not name.startswith('_'):
-                temp.append('%s=%r' % (name, value))
+                temp.append('{}={!r}'.format(name, value))
         temp.sort()
-        return '%s(%s)' % (self.__class__.__name__, str.join(', ', temp))
+        return '{}({})'.format(self.__class__.__name__, str.join(', ', temp))
 
 
 dict = dict
@@ -133,7 +132,7 @@ def Array(typecode, sequence, lock=True):
     return array.array(typecode, sequence)
 
 
-class Value(object):
+class Value:
 
     def __init__(self, typecode, value, lock=True):
         self._typecode = typecode
@@ -147,7 +146,7 @@ class Value(object):
     value = property(_get, _set)
 
     def __repr__(self):
-        return '<%r(%r, %r)>' % (type(self).__name__,
+        return '<{!r}({!r}, {!r})>'.format(type(self).__name__,
                                  self._typecode, self._value)
 
 

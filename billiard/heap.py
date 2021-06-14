@@ -6,7 +6,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 import bisect
 import errno
@@ -33,7 +32,7 @@ PY3 = sys.version_info[0] == 3
 
 if sys.platform == 'win32':
 
-    class Arena(object):
+    class Arena:
 
         _rand = tempfile._RandomNameSequence()
 
@@ -67,7 +66,7 @@ if sys.platform == 'win32':
 
 else:
 
-    class Arena(object):
+    class Arena:
 
         def __init__(self, size, fd=-1):
             self.size = size
@@ -81,7 +80,7 @@ else:
 
                     os.unlink(name)
                     util.Finalize(self, os.close, (self.fd,))
-                    with io.open(self.fd, 'wb', closefd=False) as f:
+                    with open(self.fd, 'wb', closefd=False) as f:
                         bs = 1024 * 1024
                         if size >= bs:
                             zeros = b'\0' * bs
@@ -119,7 +118,7 @@ else:
 #
 
 
-class Heap(object):
+class Heap:
 
     _alignment = 8
 
@@ -265,7 +264,7 @@ class Heap(object):
 #
 
 
-class BufferWrapper(object):
+class BufferWrapper:
 
     _heap = Heap()
 

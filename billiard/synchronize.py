@@ -6,7 +6,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 import errno
 import sys
@@ -57,7 +56,7 @@ def _semname(sl):
         pass
 
 
-class SemLock(object):
+class SemLock:
     _rand = tempfile._RandomNameSequence()
 
     def __init__(self, kind, value, maxvalue, ctx=None):
@@ -71,7 +70,7 @@ class SemLock(object):
                     sl = self._semlock = _billiard.SemLock(
                         kind, value, maxvalue, self._make_name(), unlink_now,
                     )
-                except (OSError, IOError) as exc:
+                except OSError as exc:
                     if getattr(exc, 'errno', None) != errno.EEXIST:
                         raise
                 else:
@@ -139,7 +138,7 @@ class SemLock(object):
 
     @staticmethod
     def _make_name():
-        return '%s-%s' % (process.current_process()._config['semprefix'],
+        return '{}-{}'.format(process.current_process()._config['semprefix'],
                           next(SemLock._rand))
 
 
@@ -156,7 +155,7 @@ class Semaphore(SemLock):
             value = self._semlock._get_value()
         except Exception:
             value = 'unknown'
-        return '<%s(value=%s)>' % (self.__class__.__name__, value)
+        return '<{}(value={})>'.format(self.__class__.__name__, value)
 
 
 class BoundedSemaphore(Semaphore):
@@ -169,7 +168,7 @@ class BoundedSemaphore(Semaphore):
             value = self._semlock._get_value()
         except Exception:
             value = 'unknown'
-        return '<%s(value=%s, maxvalue=%s)>' % (
+        return '<{}(value={}, maxvalue={})>'.format(
             self.__class__.__name__, value, self._semlock.maxvalue)
 
 
@@ -195,7 +194,7 @@ class Lock(SemLock):
                 name = 'SomeOtherProcess'
         except Exception:
             name = 'unknown'
-        return '<%s(owner=%s)>' % (self.__class__.__name__, name)
+        return '<{}(owner={})>'.format(self.__class__.__name__, name)
 
 
 class RLock(SemLock):
@@ -221,10 +220,10 @@ class RLock(SemLock):
                 name, count = 'SomeOtherProcess', 'nonzero'
         except Exception:
             name, count = 'unknown', 'unknown'
-        return '<%s(%s, %s)>' % (self.__class__.__name__, name, count)
+        return '<{}({}, {})>'.format(self.__class__.__name__, name, count)
 
 
-class Condition(object):
+class Condition:
     '''
     Condition variable
     '''
@@ -263,7 +262,7 @@ class Condition(object):
                            self._woken_count._semlock._get_value())
         except Exception:
             num_waiters = 'unknown'
-        return '<%s(%s, %s)>' % (
+        return '<{}({}, {})>'.format(
             self.__class__.__name__, self._lock, num_waiters)
 
     def wait(self, timeout=None):
@@ -348,7 +347,7 @@ class Condition(object):
         return result
 
 
-class Event(object):
+class Event:
 
     def __init__(self, ctx=None):
         assert ctx
@@ -431,7 +430,7 @@ if hasattr(threading, 'Barrier'):
 
 else:
 
-    class Barrier(object):  # noqa
+    class Barrier:  # noqa
 
         def __init__(self, *args, **kwargs):
             raise NotImplementedError('Barrier only supported on Py3')

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import sys
 import traceback
 
@@ -8,7 +6,7 @@ __all__ = ['ExceptionInfo', 'Traceback']
 DEFAULT_MAX_FRAMES = sys.getrecursionlimit() // 8
 
 
-class _Code(object):
+class _Code:
 
     def __init__(self, code):
         self.co_filename = code.co_filename
@@ -26,7 +24,7 @@ class _Code(object):
         self.co_varnames = ()
 
 
-class _Frame(object):
+class _Frame:
     Code = _Code
 
     def __init__(self, frame):
@@ -53,13 +51,13 @@ class _Frame(object):
         self.f_restricted = False
 
 
-class _Object(object):
+class _Object:
 
     def __init__(self, **kw):
         [setattr(self, k, v) for k, v in kw.items()]
 
 
-class _Truncated(object):
+class _Truncated:
 
     def __init__(self):
         self.tb_lineno = -1
@@ -75,7 +73,7 @@ class _Truncated(object):
         self.tb_lasti = 0
 
 
-class Traceback(object):
+class Traceback:
     Frame = _Frame
 
     def __init__(self, tb, max_frames=DEFAULT_MAX_FRAMES, depth=0):
@@ -90,7 +88,7 @@ class Traceback(object):
                 self.tb_next = _Truncated()
 
 
-class ExceptionInfo(object):
+class ExceptionInfo:
     """Exception wrapping an exception and its traceback.
 
     :param exc_info: The exception info tuple as returned by
@@ -128,7 +126,7 @@ class ExceptionInfo(object):
         return self.traceback
 
     def __repr__(self):
-        return "<%s: %r>" % (self.__class__.__name__, self.exception, )
+        return "<{}: {!r}>".format(self.__class__.__name__, self.exception)
 
     @property
     def exc_info(self):

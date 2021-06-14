@@ -10,7 +10,6 @@
 # the next reboot.  Without this semaphore tracker process, "killall
 # python" would probably leave unlinked semaphores.
 #
-from __future__ import absolute_import
 
 import io
 import os
@@ -28,7 +27,7 @@ from .compat import spawnv_passfds
 __all__ = ['ensure_running', 'register', 'unregister']
 
 
-class SemaphoreTracker(object):
+class SemaphoreTracker:
 
     def __init__(self):
         self._lock = threading.Lock()
@@ -78,7 +77,7 @@ class SemaphoreTracker(object):
 
     def _send(self, cmd, name):
         self.ensure_running()
-        msg = '{0}:{1}\n'.format(cmd, name).encode('ascii')
+        msg = '{}:{}\n'.format(cmd, name).encode('ascii')
         if len(name) > 512:
             # posix guarantees that writes to a pipe of less than PIPE_BUF
             # bytes are atomic, and that PIPE_BUF >= 512
@@ -109,7 +108,7 @@ def main(fd):
     cache = set()
     try:
         # keep track of registered/unregistered semaphores
-        with io.open(fd, 'rb') as f:
+        with open(fd, 'rb') as f:
             for line in f:
                 try:
                     cmd, name = line.strip().split(b':')
@@ -142,6 +141,6 @@ def main(fd):
                 try:
                     _billiard.sem_unlink(name)
                 except Exception as e:
-                    warnings.warn('semaphore_tracker: %r: %s' % (name, e))
+                    warnings.warn('semaphore_tracker: {!r}: {}'.format(name, e))
             finally:
                 pass

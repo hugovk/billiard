@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # multiprocessing documentation build configuration file, created by
 # sphinx-quickstart on Wed Nov 26 12:47:00 2008.
@@ -38,8 +37,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'multiprocessing'
-copyright = u'2008, Python Software Foundation'
+project = 'multiprocessing'
+copyright = '2008, Python Software Foundation'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

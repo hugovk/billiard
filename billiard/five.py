@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     celery.five
     ~~~~~~~~~~~
@@ -8,7 +7,6 @@
 
 
 """
-from __future__ import absolute_import
 
 # ############# py3k #########################################################
 import sys
@@ -174,7 +172,7 @@ else:
     BytesIO = WhateverIO = StringIO         # noqa
 
 
-def with_metaclass(Type, skip_attrs=set(['__dict__', '__weakref__'])):
+def with_metaclass(Type, skip_attrs={'__dict__', '__weakref__'}):
     """Class decorator to set metaclass.
 
     Works with both Python 2 and Python 3 and it does not add
@@ -184,8 +182,8 @@ def with_metaclass(Type, skip_attrs=set(['__dict__', '__weakref__'])):
     """
 
     def _clone_with_metaclass(Class):
-        attrs = dict((key, value) for key, value in items(vars(Class))
-                     if key not in skip_attrs)
+        attrs = {key: value for key, value in items(vars(Class))
+                     if key not in skip_attrs}
         return Type(Class.__name__, Class.__bases__, attrs)
 
     return _clone_with_metaclass

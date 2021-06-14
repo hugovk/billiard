@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Module providing the `Pool` class for managing a process pool
 #
@@ -7,7 +6,6 @@
 # Copyright (c) 2006-2008, R Oudkerk
 # Licensed to PSF under a Contributor Agreement.
 #
-from __future__ import absolute_import
 
 #
 # Imports
@@ -211,13 +209,13 @@ class MaybeEncodingError(Exception):
     def __init__(self, exc, value):
         self.exc = repr(exc)
         self.value = repr(value)
-        super(MaybeEncodingError, self).__init__(self.exc, self.value)
+        super().__init__(self.exc, self.value)
 
     def __repr__(self):
-        return "<%s: %s>" % (self.__class__.__name__, str(self))
+        return "<{}: {}>".format(self.__class__.__name__, str(self))
 
     def __str__(self):
-        return "Error sending result: '%r'. Reason: '%r'." % (
+        return "Error sending result: '{!r}'. Reason: '{!r}'.".format(
             self.value, self.exc)
 
 
@@ -233,7 +231,7 @@ def soft_timeout_sighandler(signum, frame):
 #
 
 
-class Worker(object):
+class Worker:
 
     def __init__(self, inq, outq, synq=None, initializer=None, initargs=(),
                  maxtasks=None, sentinel=None, on_exit=None,
@@ -473,7 +471,7 @@ class Worker(object):
                 ready, req = _receive(1.0)
                 if not ready:
                     return None
-            except (EOFError, IOError) as exc:
+            except (EOFError, OSError) as exc:
                 if get_errno(exc) == errno.EINTR:
                     return None  # interrupted, maybe by gdb
                 debug('worker got %s -- exiting', type(exc).__name__)
@@ -514,7 +512,7 @@ class PoolThread(DummyProcess):
 
     def start(self, *args, **kwargs):
         self._was_started = True
-        super(PoolThread, self).start(*args, **kwargs)
+        super().start(*args, **kwargs)
 
     def on_stop_not_started(self):
         pass
@@ -536,7 +534,7 @@ class Supervisor(PoolThread):
 
     def __init__(self, pool):
         self.pool = pool
-        super(Supervisor, self).__init__()
+        super().__init__()
 
     def body(self):
         debug('worker handler starting')
@@ -577,7 +575,7 @@ class TaskHandler(PoolThread):
         self.outqueue = outqueue
         self.pool = pool
         self.cache = cache
-        super(TaskHandler, self).__init__()
+        super().__init__()
 
     def body(self):
         cache = self.cache
@@ -594,7 +592,7 @@ class TaskHandler(PoolThread):
                         break
                     try:
                         put(task)
-                    except IOError:
+                    except OSError:
                         debug('could not put task on queue')
                         break
                     except Exception:
@@ -635,7 +633,7 @@ class TaskHandler(PoolThread):
             debug('task handler sending sentinel to workers')
             for p in pool:
                 put(None)
-        except IOError:
+        except OSError:
             debug('task handler got IOError when sending sentinels')
 
         debug('task handler exiting')
@@ -652,7 +650,7 @@ class TimeoutHandler(PoolThread):
         self.t_soft = t_soft
         self.t_hard = t_hard
         self._it = None
-        super(TimeoutHandler, self).__init__()
+        super().__init__()
 
     def _process_by_pid(self, pid):
         return next((
@@ -740,7 +738,7 @@ class TimeoutHandler(PoolThread):
 
             # Remove dirty items not in cache anymore
             if dirty:
-                dirty = set(k for k in dirty if k in cache)
+                dirty = {k for k in dirty if k in cache}
 
             for i, job in cache.items():
                 ack_time = job._time_accepted
@@ -793,7 +791,7 @@ class ResultHandler(PoolThread):
         self.on_job_ready = on_job_ready
         self.on_ready_counters = on_ready_counters
         self._make_methods()
-        super(ResultHandler, self).__init__()
+        super().__init__()
 
     def on_stop_not_started(self):
         # used when pool started without result handler thread.
@@ -862,7 +860,7 @@ class ResultHandler(PoolThread):
         while 1:
             try:
                 ready, task = poll(timeout)
-            except (IOError, EOFError) as exc:
+            except (OSError, EOFError) as exc:
                 debug('result handler got %r -- exiting', exc)
                 raise CoroStop()
 
@@ -919,7 +917,7 @@ class ResultHandler(PoolThread):
                 check_timeouts()
             try:
                 ready, task = poll(1.0)
-            except (IOError, EOFError) as exc:
+            except (OSError, EOFError) as exc:
                 debug('result handler got %r -- exiting', exc)
                 return
 
@@ -953,14 +951,14 @@ class ResultHandler(PoolThread):
                     if not outqueue._reader.poll():
                         break
                     get()
-            except (IOError, EOFError):
+            except (OSError, EOFError):
                 pass
 
         debug('result handler exiting: len(cache)=%s, thread._state=%s',
               len(cache), self._state)
 
 
-class Pool(object):
+class Pool:
     '''
     Class which supports an async version of applying functions to arguments.
     '''
@@ -1263,7 +1261,7 @@ class Pool(object):
     def mark_as_worker_lost(self, job, exitcode):
         try:
             raise WorkerLostError(
-                'Worker exited prematurely: {0} Job: {1}.'.format(
+                'Worker exited prematurely: {} Job: {}.'.format(
                     human_status(exitcode), job._job),
             )
         except WorkerLostError:
@@ -1330,7 +1328,7 @@ class Pool(object):
 
     def _avail_index(self):
         assert len(self._pool) < self._processes
-        indices = set(p.index for p in self._pool)
+        indices = {p.index for p in self._pool}
         return next(i for i in range(self._processes) if i not in indices)
 
     def did_start_ok(self):
@@ -1708,7 +1706,7 @@ class Pool(object):
 #
 
 
-class ApplyResult(object):
+class ApplyResult:
     _worker_lost = None
     _write_to = None
     _scheduled_for = None
@@ -1927,7 +1925,7 @@ class MapResult(ApplyResult):
 #
 
 
-class IMapIterator(object):
+class IMapIterator:
     _worker_lost = None
 
     def __init__(self, cache, lost_worker_timeout=LOST_WORKER_TIMEOUT):

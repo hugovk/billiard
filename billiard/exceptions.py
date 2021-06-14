@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 try:
     from multiprocessing import (
         ProcessError,
@@ -25,7 +23,7 @@ class TimeLimitExceeded(Exception):
     """The time limit has been exceeded and the job has been terminated."""
 
     def __str__(self):
-        return "TimeLimitExceeded%s" % (self.args, )
+        return "TimeLimitExceeded{}".format(self.args)
 
 
 class SoftTimeLimitExceeded(Exception):
@@ -33,7 +31,7 @@ class SoftTimeLimitExceeded(Exception):
     to give the task a chance to clean up."""
 
     def __str__(self):
-        return "SoftTimeLimitExceeded%s" % (self.args, )
+        return "SoftTimeLimitExceeded{}".format(self.args)
 
 
 class WorkerLostError(Exception):

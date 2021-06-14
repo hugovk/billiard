@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import os
 import sys
 import threading
@@ -35,7 +33,7 @@ from .exceptions import (  # noqa
 # Base type for contexts
 #
 
-class BaseContext(object):
+class BaseContext:
 
     ProcessError = ProcessError
     BufferTooShort = BufferTooShort
@@ -289,7 +287,7 @@ class DefaultContext(BaseContext):
                 self._actual_context = self._default_context
             return self._actual_context
         else:
-            return super(DefaultContext, self).get_context(method)
+            return super().get_context(method)
 
     def set_start_method(self, method, force=False):
         if self._actual_context is not None and not force:

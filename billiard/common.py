@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 This module contains utilities added by billiard, to keep
 "non-core" functionality out of ``.util``."""
-from __future__ import absolute_import
 
 import os
 import signal
@@ -31,9 +29,9 @@ else:
     except ImportError:
         from StringIO import StringIO as BytesIO  # noqa
 
-SIGMAP = dict(
-    (getattr(signal, n), n) for n in dir(signal) if n.startswith('SIG')
-)
+SIGMAP = {
+    getattr(signal, n): n for n in dir(signal) if n.startswith('SIG')
+}
 for _alias_sig in ('SIGHUP', 'SIGABRT'):
     try:
         # Alias for deprecated signal overwrites the name we want
@@ -90,10 +88,10 @@ _should_have_exited = [False]
 def human_status(status):
     if (status or 0) < 0:
         try:
-            return 'signal {0} ({1})'.format(-status, SIGMAP[-status])
+            return 'signal {} ({})'.format(-status, SIGMAP[-status])
         except KeyError:
-            return 'signal {0}'.format(-status)
-    return 'exitcode {0}'.format(status)
+            return 'signal {}'.format(-status)
+    return 'exitcode {}'.format(status)
 
 
 def pickle_loads(s, load=pickle_load):
@@ -142,7 +140,7 @@ def reset_signals(handler=_shutdown_cleanup, full=False):
             maybe_setsignal(num, signal.SIG_IGN)
 
 
-class restart_state(object):
+class restart_state:
     RestartFreqExceeded = RestartFreqExceeded
 
     def __init__(self, maxR, maxT):
@@ -162,7 +160,7 @@ class restart_state(object):
             # protection)
             if self.R:  # pragma: no cover
                 self.R = 0  # reset in case someone catches the error
-                raise self.RestartFreqExceeded("%r in %rs" % (R, self.maxT))
+                raise self.RestartFreqExceeded("{!r} in {!r}s".format(R, self.maxT))
         # first run sets T
         if self.T is None:
             self.T = now
