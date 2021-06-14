@@ -19,10 +19,6 @@ if sys.platform == 'win32':
     # distutils.msvc9compiler can raise IOError if the compiler is missing
     ext_errors += (IOError, )
 
-is_jython = sys.platform.startswith('java')
-is_pypy = hasattr(sys, 'pypy_version_info')
-is_py3k = sys.version_info[0] == 3
-
 BUILD_WARNING = """
 
 -----------------------------------------------------------------------
@@ -85,8 +81,8 @@ finally:
     meta_fh.close()
 
 
-if sys.version_info < (2, 7):
-    raise ValueError('Versions of Python before 2.7 are not supported')
+if sys.version_info < (3, 5):
+    raise ValueError('Versions of Python before 3.5 are not supported')
 
 if sys.platform == 'win32':  # Windows
     macros = dict()
@@ -160,8 +156,6 @@ long_description = open(os.path.join(HERE, 'README.rst')).read()
 # -*- Installation Requires -*-
 
 py_version = sys.version_info
-is_jython = sys.platform.startswith('java')
-is_pypy = hasattr(sys, 'pypy_version_info')
 
 
 def _is_build_command(argv=sys.argv, cmds=('install', 'build', 'bdist')):
@@ -216,14 +210,13 @@ def run_setup(with_extensions=True):
             'Intended Audience :: Developers',
             'Programming Language :: Python',
             'Programming Language :: C',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
             'Programming Language :: Python :: 3.9',
+            'Programming Language :: Python :: 3 :: Only',
             'Programming Language :: Python :: Implementation :: CPython',
             'Programming Language :: Python :: Implementation :: PyPy',
             'Operating System :: Microsoft :: Windows',
@@ -236,7 +229,7 @@ def run_setup(with_extensions=True):
     )
 
 try:
-    run_setup(not (is_jython or is_pypy or is_py3k))
+    run_setup()
 except BaseException:
     if _is_build_command(sys.argv):
         import traceback

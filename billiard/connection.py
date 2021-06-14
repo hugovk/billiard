@@ -45,8 +45,6 @@ else:
 
 __all__ = ['Client', 'Listener', 'Pipe', 'wait']
 
-is_pypy = hasattr(sys, 'pypy_version_info')
-
 #
 #
 #
